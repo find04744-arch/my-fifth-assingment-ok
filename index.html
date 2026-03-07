@@ -16,12 +16,16 @@
         }
 
         .hidden { display: none; }
+
+        /* কার্ডের উপরের মোটা বর্ডার স্টাইল */
         .issue-card-open { 
             border-top: 5px solid #22c55e !important; 
         }
         .issue-card-closed { 
             border-top: 5px solid #9333ea !important; 
         }
+        
+        /* ফিল্টার বাটন স্টাইল */
         .btn-filter {
             padding: 10px 35px;
             font-weight: 600;
@@ -151,13 +155,27 @@
                 const isOp = val.status === 'open';
                 const borderClass = isOp ? 'issue-card-open' : 'issue-card-closed';
                 
+                // আইকন পরিবর্তন করার লজিক
+                let iconHTML = '';
+                if (val.priority === 'HIGH' || val.priority === 'MEDIUM') {
+                    // ডটেড সার্কেল লোগো (আপনার ছবির মতো)
+                    iconHTML = `<div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="9" stroke-dasharray="4 4"></circle>
+                                    </svg>
+                                </div>`;
+                } else {
+                    // Low বা অন্যদের জন্য চেক আইকন
+                    iconHTML = `<i class="far fa-check-circle text-purple-400 text-lg"></i>`;
+                }
+
                 const div = document.createElement('div');
                 div.className = `bg-white p-6 rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all hover:shadow-md ${borderClass}`;
                 div.onclick = () => showPopup(val._id);
 
                 div.innerHTML = `
                     <div class="flex justify-between items-start mb-4">
-                        <i class="${isOp ? 'far fa-dot-circle text-green-500' : 'fas fa-check-circle text-purple-600'} text-lg"></i>
+                        ${iconHTML}
                         <span class="text-[10px] font-black px-2 py-1 ${val.priority === 'HIGH' ? 'bg-red-50 text-red-500' : val.priority === 'MEDIUM' ? 'bg-orange-50 text-orange-500' : 'bg-gray-100 text-gray-500'} rounded uppercase border border-gray-100">
                             ${val.priority}
                         </span>
