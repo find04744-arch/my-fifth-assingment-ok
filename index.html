@@ -25,8 +25,9 @@
             border-top: 5px solid #9333ea !important; 
         }
         
+        /* ফিল্টার বাটন স্টাইল */
         .btn-filter {
-            padding: 10px 30px;
+            padding: 10px 35px;
             font-weight: 600;
             font-size: 0.85rem;
             transition: all 0.3s ease;
@@ -87,7 +88,7 @@
         </nav>
 
         <div class="max-w-7xl mx-auto p-8">
-            <div class="flex gap-3 mb-10">
+            <div class="flex gap-3 mb-10 bg-white p-2 rounded-xl border border-gray-100 shadow-sm inline-flex">
                 <button id="all" onclick="filterData('all')" class="btn-filter active-all">All</button>
                 <button id="open" onclick="filterData('open')" class="btn-filter">Open</button>
                 <button id="closed" onclick="filterData('closed')" class="btn-filter">Closed</button>
@@ -95,8 +96,16 @@
 
             <div class="flex items-center justify-between mb-8 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center">
-                        <i class="fas fa-tasks text-indigo-600 text-xl"></i>
+                    <div class="w-14 h-14 bg-[#eeebff] rounded-full flex items-center justify-center">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="14.31" y1="8" x2="20.05" y2="17.94"></line>
+                            <line x1="9.69" y1="8" x2="21.17" y2="8"></line>
+                            <line x1="7.38" y1="12" x2="13.12" y2="2.06"></line>
+                            <line x1="9.69" y1="16" x2="3.95" y2="6.06"></line>
+                            <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
+                            <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
+                        </svg>
                     </div>
                     <div>
                         <h3 id="info-text" class="text-2xl font-black text-gray-900 leading-none">0 Issues</h3>
@@ -144,7 +153,6 @@
 
             dataArray.forEach(val => {
                 const isOp = val.status === 'open';
-                // এখানে স্ট্যাটাস অনুযায়ী ক্লাস সেট করা হচ্ছে
                 const borderClass = isOp ? 'issue-card-open' : 'issue-card-closed';
                 
                 const div = document.createElement('div');
@@ -154,7 +162,7 @@
                 div.innerHTML = `
                     <div class="flex justify-between items-start mb-4">
                         <i class="${isOp ? 'far fa-dot-circle text-green-500' : 'fas fa-check-circle text-purple-600'} text-lg"></i>
-                        <span class="text-[10px] font-black px-2 py-1 bg-gray-100 text-gray-500 rounded uppercase border border-gray-200">
+                        <span class="text-[10px] font-black px-2 py-1 ${val.priority === 'HIGH' ? 'bg-red-50 text-red-500' : val.priority === 'MEDIUM' ? 'bg-orange-50 text-orange-500' : 'bg-gray-100 text-gray-500'} rounded uppercase border border-gray-100">
                             ${val.priority}
                         </span>
                     </div>
@@ -239,7 +247,7 @@
                 temp.push({
                     _id: "idx-" + Math.random().toString(36).substr(2, 9),
                     title: i + ". Fix Navigation Menu On Mobile Devices",
-                    description: "The navigation menu doesn't collapse properly on mobile devices. Need to fix responsive design issues.",
+                    description: "The navigation menu doesn't collapse properly on mobile devices. Need to fix responsive design issues and CSS media queries.",
                     status: i % 2 === 0 ? "open" : "closed",
                     priority: i % 3 === 0 ? "HIGH" : i % 2 === 0 ? "MEDIUM" : "LOW",
                     author: "john_doe"
