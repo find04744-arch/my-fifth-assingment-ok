@@ -17,13 +17,14 @@
 
         .hidden { display: none; }
 
-        /* কার্ডের উপরের বর্ডার স্টাইল - ডাইনামিক বর্ডার কালার */
-        .issue-card { 
-            border-top-width: 4px; 
-            border-top-style: solid;
+        /* কার্ডের উপরের মোটা বর্ডার স্টাইল */
+        .issue-card-open { 
+            border-top: 5px solid #22c55e !important; 
+        }
+        .issue-card-closed { 
+            border-top: 5px solid #9333ea !important; 
         }
         
-        /* ফিল্টার বাটন স্টাইল */
         .btn-filter {
             padding: 10px 30px;
             font-weight: 600;
@@ -143,20 +144,11 @@
 
             dataArray.forEach(val => {
                 const isOp = val.status === 'open';
+                // এখানে স্ট্যাটাস অনুযায়ী ক্লাস সেট করা হচ্ছে
+                const borderClass = isOp ? 'issue-card-open' : 'issue-card-closed';
                 
-                // এখানে প্রায়োরিটি অনুযায়ী বর্ডার কালার সেট করা হয়েছে
-                let borderColor = "#cbd5e1"; // ডিফল্ট কালার
-                if (val.priority === "HIGH") borderColor = "#ef4444";
-                if (val.priority === "MEDIUM") borderColor = "#f59e0b";
-                if (val.priority === "LOW") borderColor = "#22c55e";
-                
-                // যদি ক্লোজড ইস্যু হয় তবে বর্ডার পার্পল হবে (আপনার ইমেজের মতো)
-                if (!isOp) borderColor = "#9333ea";
-
                 const div = document.createElement('div');
-                div.className = `bg-white p-6 rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all hover:shadow-md issue-card`;
-                div.style.borderTopColor = borderColor; // ডাইনামিক বর্ডার কালার অ্যাপ্লাই
-                
+                div.className = `bg-white p-6 rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all hover:shadow-md ${borderClass}`;
                 div.onclick = () => showPopup(val._id);
 
                 div.innerHTML = `
@@ -212,15 +204,15 @@
                 <div class="flex flex-col">
                     <h2 class="text-2xl font-black text-gray-900 mb-3">${single.title}</h2>
                     <div class="flex items-center gap-3 mb-6">
-                        <span class="bg-green-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Opened</span>
-                        <span class="text-gray-400 text-[12px] font-medium">• Opened by ${single.author} • 22/02/2026</span>
+                        <span class="${single.status === 'open' ? 'bg-green-500' : 'bg-purple-600'} text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">${single.status === 'open' ? 'Opened' : 'Closed'}</span>
+                        <span class="text-gray-400 text-[12px] font-medium">• Author: ${single.author} • 22/02/2026</span>
                     </div>
                     <div class="flex gap-2 mb-6">
                         <span class="bg-red-50 text-red-500 text-[10px] font-black px-3 py-1 rounded border border-red-100 uppercase">BUG</span>
                         <span class="bg-orange-50 text-orange-400 text-[10px] font-black px-3 py-1 rounded border border-orange-100 uppercase">HELP WANTED</span>
                     </div>
                     <p class="text-gray-600 text-sm leading-relaxed mb-8">
-                        The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior and ensure accessibility standards are met.
+                        ${single.description}
                     </p>
                     <div class="grid grid-cols-2 gap-4 bg-gray-50 p-6 rounded-2xl border border-gray-100">
                         <div>
@@ -247,7 +239,7 @@
                 temp.push({
                     _id: "idx-" + Math.random().toString(36).substr(2, 9),
                     title: i + ". Fix Navigation Menu On Mobile Devices",
-                    description: "The navigation menu doesn't collapse properly on mobile devices. Need to fix media queries.",
+                    description: "The navigation menu doesn't collapse properly on mobile devices. Need to fix responsive design issues.",
                     status: i % 2 === 0 ? "open" : "closed",
                     priority: i % 3 === 0 ? "HIGH" : i % 2 === 0 ? "MEDIUM" : "LOW",
                     author: "john_doe"
