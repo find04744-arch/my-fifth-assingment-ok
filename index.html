@@ -3,20 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Issues Tracker - Assignment 05</title>
+    <title>GitHub Issues Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
         .hidden { display: none; }
 
-        /* Card Top Borders */
-        .issue-card-open { border-top: 5px solid #22c55e !important; }
-        .issue-card-closed { border-top: 5px solid #9333ea !important; }
+        /* কার্ডের উপরের মোটা বর্ডার স্টাইল */
+        .issue-card-open { 
+            border-top: 5px solid #22c55e !important; 
+        }
+        .issue-card-closed { 
+            border-top: 5px solid #9333ea !important; 
+        }
         
-        /* Filter Buttons */
+        /* ফিল্টার বাটন স্টাইল */
         .btn-filter {
             padding: 10px 35px;
             font-weight: 600;
@@ -27,13 +36,25 @@
             background: white;
             color: #64748b;
         }
+
         .active-all { background-color: #4f46e5 !important; color: white !important; border-color: #4f46e5; }
         .active-open { background-color: #22c55e !important; color: white !important; border-color: #22c55e; }
         .active-closed { background-color: #9333ea !important; color: white !important; border-color: #9333ea; }
 
-        .modal-bg { background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(6px); z-index: 100; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #4f46e5; border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .modal-bg {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .close-btn {
+            background-color: #4f46e5;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+        .close-btn:hover { background-color: #4338ca; }
     </style>
 </head>
 <body>
@@ -41,10 +62,10 @@
     <div id="login-area" class="min-h-screen flex items-center justify-center p-5">
         <div class="bg-white p-10 rounded-[30px] shadow-xl border border-gray-100 w-full max-w-sm text-center">
             <i class="fab fa-github text-6xl mb-6 text-gray-800"></i>
-            <h2 class="text-2xl font-extrabold text-gray-800 mb-2 tracking-tight">Login to Tracker</h2>
+            <h2 class="text-2xl font-extrabold text-gray-800 mb-6 tracking-tight">Login to Tracker</h2>
             <div class="text-left space-y-4">
-                <input type="text" id="user-input" value="admin" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400 bg-gray-50">
-                <input type="password" id="pass-input" value="admin123" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400 bg-gray-50">
+                <input type="text" id="user-input" placeholder="Username" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400 bg-gray-50">
+                <input type="password" id="pass-input" placeholder="Password" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-400 bg-gray-50">
                 <button onclick="startLogin()" class="w-full bg-[#4f46e5] text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition shadow-lg">Sign In</button>
             </div>
             <p class="mt-8 text-[10px] text-gray-400 font-bold uppercase tracking-widest">Demo: admin / admin123</p>
@@ -62,6 +83,7 @@
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     <input type="text" id="find-box" onkeyup="searchMe()" placeholder="Search issues..." class="w-full pl-11 pr-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:border-indigo-500 bg-gray-50">
                 </div>
+                <button class="bg-[#4f46e5] text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow hover:bg-indigo-700 transition">+ New Issue</button>
             </div>
         </nav>
 
@@ -74,24 +96,34 @@
 
             <div class="flex items-center justify-between mb-8 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-[#eeebff] rounded-full flex items-center justify-center"><i class="fas fa-dot-circle text-indigo-600 text-xl"></i></div>
+                    <div class="w-14 h-14 bg-[#eeebff] rounded-full flex items-center justify-center">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="14.31" y1="8" x2="20.05" y2="17.94"></line>
+                            <line x1="9.69" y1="8" x2="21.17" y2="8"></line>
+                            <line x1="7.38" y1="12" x2="13.12" y2="2.06"></line>
+                            <line x1="9.69" y1="16" x2="3.95" y2="6.06"></line>
+                            <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
+                            <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
+                        </svg>
+                    </div>
                     <div>
                         <h3 id="info-text" class="text-2xl font-black text-gray-900 leading-none">0 Issues</h3>
-                        <p class="text-[12px] text-gray-400 font-bold mt-1 uppercase tracking-wide">Assignment-05 Overview</p>
+                        <p class="text-[12px] text-gray-400 font-bold mt-1 uppercase tracking-wide">Track and manage your project issues</p>
                     </div>
                 </div>
-            </div>
-
-            <div id="loader-container" class="hidden flex flex-col items-center justify-center py-20">
-                <div class="loader"></div>
+                <div class="flex gap-4 text-xs font-bold text-gray-500 uppercase">
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Open</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span> Closed</span>
+                </div>
             </div>
 
             <div id="card-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </div>
     </div>
 
-    <div id="item-modal" class="fixed inset-0 modal-bg hidden items-center justify-center p-4">
-        <div class="bg-white rounded-[28px] w-full max-w-2xl overflow-hidden shadow-2xl p-10">
+    <div id="item-modal" class="fixed inset-0 modal-bg hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-[24px] w-full max-w-2xl overflow-hidden relative shadow-2xl p-8">
             <div id="modal-data"></div>
         </div>
     </div>
@@ -106,30 +138,12 @@
                 document.getElementById('login-area').style.display = 'none';
                 document.getElementById('main-app').classList.remove('hidden');
                 getIssues();
-            } else { alert("Login failed!"); }
+            } else { alert("Incorrect credentials!"); }
         }
 
         async function getIssues() {
-            const loader = document.getElementById('loader-container');
-            loader.classList.remove('hidden');
-
-            try {
-                // রিকোয়ারমেন্ট অনুযায়ী API থেকে ডাটা আনা
-                const res = await fetch('https://phi-lab-server.vercel.app/api/v1/lab/issues');
-                const result = await res.json();
-                const apiData = result.data || [];
-                
-                // API ডাটার সাথে আপনার ৫০টি ফেক কার্ড যোগ করা
-                const fakeData = makeFakeData();
-                myData = [...apiData, ...fakeData]; 
-                
-                showUI(myData);
-            } catch (err) {
-                myData = makeFakeData();
-                showUI(myData);
-            } finally {
-                loader.classList.add('hidden');
-            }
+            myData = makeFakeData();
+            showUI(myData);
         }
 
         function showUI(dataArray) {
@@ -138,75 +152,108 @@
             list.innerHTML = "";
 
             dataArray.forEach(val => {
-                const isOp = val.status.toLowerCase() === 'open';
+                const isOp = val.status === 'open';
                 const borderClass = isOp ? 'issue-card-open' : 'issue-card-closed';
                 
+                // আইকন পরিবর্তন করার লজিক
+                let iconHTML = '';
+                if (val.priority === 'HIGH' || val.priority === 'MEDIUM') {
+                    // ডটেড সার্কেল লোগো (আপনার ছবির মতো)
+                    iconHTML = `<div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="9" stroke-dasharray="4 4"></circle>
+                                    </svg>
+                                </div>`;
+                } else {
+                    // Low বা অন্যদের জন্য চেক আইকন
+                    iconHTML = `<i class="far fa-check-circle text-purple-400 text-lg"></i>`;
+                }
+
                 const div = document.createElement('div');
-                div.className = `bg-white p-6 rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all hover:scale-[1.02] flex flex-col ${borderClass}`;
+                div.className = `bg-white p-6 rounded-xl shadow-sm border border-gray-100 cursor-pointer transition-all hover:shadow-md ${borderClass}`;
                 div.onclick = () => showPopup(val._id);
 
                 div.innerHTML = `
                     <div class="flex justify-between items-start mb-4">
-                        <div class="w-7 h-7 ${isOp ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'} rounded-full flex items-center justify-center">
-                            <i class="${isOp ? 'fas fa-dot-circle' : 'fas fa-check-circle'} text-sm"></i>
-                        </div>
-                        <span class="text-[9px] font-black px-2 py-1 ${val.priority === 'HIGH' ? 'bg-red-50 text-red-500' : 'bg-orange-50 text-orange-500'} rounded border border-gray-100 uppercase">${val.priority}</span>
+                        ${iconHTML}
+                        <span class="text-[10px] font-black px-2 py-1 ${val.priority === 'HIGH' ? 'bg-red-50 text-red-500' : val.priority === 'MEDIUM' ? 'bg-orange-50 text-orange-500' : 'bg-gray-100 text-gray-500'} rounded uppercase border border-gray-100">
+                            ${val.priority}
+                        </span>
                     </div>
-                    <h4 class="font-bold text-gray-800 text-[15px] mb-2 line-clamp-2">${val.title}</h4>
+                    <h4 class="font-bold text-gray-800 text-[15px] mb-2 leading-snug line-clamp-2">${val.title}</h4>
                     <p class="text-[12px] text-gray-400 mb-5 font-medium line-clamp-2">${val.description}</p>
+                    <div class="flex gap-2 mb-6">
+                        <span class="bg-red-50 text-red-500 text-[9px] font-black px-2 py-0.5 rounded border border-red-100 uppercase">BUG</span>
+                        <span class="bg-orange-50 text-orange-500 text-[9px] font-black px-2 py-0.5 rounded border border-orange-100 uppercase">HELP WANTED</span>
+                    </div>
                     <div class="mt-auto pt-4 border-t border-gray-50 flex justify-between text-[10px] text-gray-400 font-bold">
-                        <span>#${val._id.slice(-4)} by ${val.author}</span>
-                        <span>${new Date(val.createdAt).toLocaleDateString()}</span>
+                        <span>#${val._id.slice(-5)} by ${val.author}</span>
+                        <span>1/15/2024</span>
                     </div>
                 `;
                 list.appendChild(div);
             });
         }
 
-        function showPopup(id) {
-            const modal = document.getElementById('item-modal');
-            const box = document.getElementById('modal-data');
-            const single = myData.find(x => x._id === id);
+        function filterData(type) {
+            const btns = ['all', 'open', 'closed'];
+            btns.forEach(id => {
+                document.getElementById(id).classList.remove('active-all', 'active-open', 'active-closed');
+            });
 
-            if(!single) return;
+            const target = document.getElementById(type);
+            if(type === 'all') target.classList.add('active-all');
+            if(type === 'open') target.classList.add('active-open');
+            if(type === 'closed') target.classList.add('active-closed');
 
-            modal.classList.replace('hidden', 'flex');
-            box.innerHTML = `
-                <h2 class="text-3xl font-extrabold text-gray-900 mb-2">${single.title}</h2>
-                <div class="flex items-center gap-3 mb-8">
-                    <span class="bg-green-500 text-white text-[11px] font-bold px-4 py-1 rounded-full uppercase">${single.status}</span>
-                    <span class="text-gray-400 text-[13px]">Opened by <span class="font-bold text-gray-800">${single.author}</span></span>
-                </div>
-                <p class="text-gray-500 text-[15px] mb-10 italic border-l-4 pl-4 border-gray-100">${single.description}</p>
-                <div class="bg-gray-50 p-8 rounded-[24px] flex justify-between items-center mb-8 border border-gray-100">
-                    <div>
-                        <p class="text-[10px] text-gray-400 font-black uppercase mb-1">Assignee</p>
-                        <p class="text-[18px] font-extrabold text-gray-800">${single.author}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] text-gray-400 font-black uppercase mb-1">Priority</p>
-                        <span class="bg-red-500 text-white text-[10px] font-black px-4 py-1.5 rounded-lg uppercase">${single.priority}</span>
-                    </div>
-                </div>
-                <div class="flex justify-end"><button onclick="hidePopup()" class="bg-[#4f46e5] text-white px-10 py-3 rounded-xl font-extrabold uppercase text-sm">Close</button></div>
-            `;
+            const filtered = type === 'all' ? myData : myData.filter(i => i.status === type);
+            showUI(filtered);
         }
 
-        function hidePopup() { document.getElementById('item-modal').classList.replace('flex', 'hidden'); }
-
-        async function searchMe() {
+        function searchMe() {
             const word = document.getElementById('find-box').value.toLowerCase();
             const filtered = myData.filter(x => x.title.toLowerCase().includes(word));
             showUI(filtered);
         }
 
-        function filterData(type) {
-            const btns = ['all', 'open', 'closed'];
-            btns.forEach(id => document.getElementById(id).classList.remove('active-all', 'active-open', 'active-closed'));
-            document.getElementById(type).classList.add('active-' + type);
-            const filtered = type === 'all' ? myData : myData.filter(i => i.status.toLowerCase() === type);
-            showUI(filtered);
+        function showPopup(id) {
+            const modal = document.getElementById('item-modal');
+            const box = document.getElementById('modal-data');
+            const single = myData.find(x => x._id === id);
+            
+            modal.classList.replace('hidden', 'flex');
+            box.innerHTML = `
+                <div class="flex flex-col">
+                    <h2 class="text-2xl font-black text-gray-900 mb-3">${single.title}</h2>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="${single.status === 'open' ? 'bg-green-500' : 'bg-purple-600'} text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">${single.status === 'open' ? 'Opened' : 'Closed'}</span>
+                        <span class="text-gray-400 text-[12px] font-medium">• Author: ${single.author} • 22/02/2026</span>
+                    </div>
+                    <div class="flex gap-2 mb-6">
+                        <span class="bg-red-50 text-red-500 text-[10px] font-black px-3 py-1 rounded border border-red-100 uppercase">BUG</span>
+                        <span class="bg-orange-50 text-orange-400 text-[10px] font-black px-3 py-1 rounded border border-orange-100 uppercase">HELP WANTED</span>
+                    </div>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-8">
+                        ${single.description}
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-black uppercase mb-1">Assignee:</p>
+                            <p class="font-bold text-gray-800">Fahim Ahmed</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-black uppercase mb-1">Priority:</p>
+                            <span class="bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded uppercase">${single.priority}</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-8">
+                        <button onclick="hidePopup()" class="close-btn shadow-lg uppercase tracking-wider text-sm">Close</button>
+                    </div>
+                </div>
+            `;
         }
+
+        function hidePopup() { document.getElementById('item-modal').classList.replace('flex', 'hidden'); }
 
         function makeFakeData() {
             let temp = [];
@@ -214,11 +261,10 @@
                 temp.push({
                     _id: "idx-" + Math.random().toString(36).substr(2, 9),
                     title: i + ". Fix Navigation Menu On Mobile Devices",
-                    description: "The navigation menu doesn't collapse properly. Need to fix responsive design issues.",
+                    description: "The navigation menu doesn't collapse properly on mobile devices. Need to fix responsive design issues and CSS media queries.",
                     status: i % 2 === 0 ? "open" : "closed",
-                    priority: "HIGH",
-                    author: "Fahim_Ahmed",
-                    createdAt: new Date().toISOString()
+                    priority: i % 3 === 0 ? "HIGH" : i % 2 === 0 ? "MEDIUM" : "LOW",
+                    author: "john_doe"
                 });
             }
             return temp;
