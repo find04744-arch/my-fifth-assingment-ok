@@ -1,7 +1,5 @@
 const API_BASE = "https://phi-lab-server.vercel.app/api/v1/lab";
 let issuesData = []; 
-
-// ১. সকল ইস্যু লোড করার ফাংশন (All Issues API)
 async function loadData() {
     const loader = document.getElementById('loader');
     const grid = document.getElementById('issueGrid');
@@ -19,8 +17,6 @@ async function loadData() {
         if (loader) loader.classList.add('hidden');
     }
 }
-
-// ২. সার্চ করার ফাংশন (Search Issue API)
 async function searchIssues() {
     const searchText = document.getElementById('searchInput').value;
     
@@ -38,8 +34,6 @@ async function searchIssues() {
         console.error("Search failed", err);
     }
 }
-
-// ৩. কার্ড রেন্ডারিং (টাইটেল ও ডেসক্রিপশন তোমার ইমেজ অনুযায়ী স্ট্যাটিক)
 function renderIssues(data) {
     const grid = document.getElementById('issueGrid');
     const countElement = document.getElementById('count');
@@ -81,8 +75,8 @@ function renderIssues(data) {
                     </p>
 
                     <div class="flex gap-2 mb-2">
-                        <span class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-50 text-red-500 text-[9px] font-bold border border-red-100 italic">🤖 BUG</span>
-                        <span class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-orange-50 text-orange-500 text-[9px] font-bold border border-orange-100 italic">⚙️ HELP</span>
+                        <span class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-50 text-red-500 text-[9px] font-bold border border-red-100 italic"> BUG</span>
+                        <span class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-orange-50 text-orange-500 text-[9px] font-bold border border-orange-100 italic"> HELP</span>
                     </div>
                 </div>
                 <div class="pt-4 border-t border-gray-100 mt-4 text-gray-400 text-left">
@@ -93,8 +87,6 @@ function renderIssues(data) {
         `;
     }).join('');
 }
-
-// ৪. মডাল ওপেন (Single Issue API - এখানে আসল ডাটা দেখাবে)
 async function openModal(id) {
     try {
         const res = await fetch(`${API_BASE}/issue/${id}`);
