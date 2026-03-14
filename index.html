@@ -3,308 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Issues Tracker | Final UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
-        .hidden { display: none; }
-        
-        .issue-card-open { border-top: 4px solid #10b981 !important; }
-        .issue-card-closed { border-top: 4px solid #9333ea !important; }
-        
-        .active-tab { background-color: #4f46e5 !important; color: white !important; }
-        
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #4F00FF;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .login-card { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
-        .or-divider { display: flex; align-items: center; text-align: center; color: #94a3b8; font-size: 14px; }
-        .or-divider::before, .or-divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
-        .or-divider:not(:empty)::before { margin-right: .75em; }
-        .or-divider:not(:empty)::after { margin-left: .75em; }
-    </style>
+    <title>GitHub Issues Tracker - Login</title>
 </head>
-<body>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-10 rounded-xl shadow-sm border border-gray-200 w-full max-w-md text-center">
+        <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub" class="w-20 mx-auto mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">GitHub Issues Tracker</h1>
+        <p class="text-gray-500 mb-8">Sign in to manage your issues</p>
 
-    <div id="login-sec" class="min-h-screen flex items-center justify-center p-6 bg-[#F8FAFC]">
-        <div class="bg-white p-12 rounded-xl border border-gray-100 w-full max-w-[480px] login-card">
-            <div class="text-center mb-10">
-                <i class="fab fa-github text-8xl text-gray-900 mb-6"></i>
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">GitHub Issues Tracker</h2>
-                <p class="text-gray-500">Sign in to manage your issues</p>
+        <form id="loginForm" class="text-left space-y-5">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Username</label>
+                <input type="text" id="username" placeholder="Enter Username" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                <p class="text-xs text-indigo-600 mt-1">Default: admin</p>
             </div>
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Username</label>
-                    <input type="text" id="u-name" value="admin" class="w-full px-4 py-3.5 rounded-lg border border-gray-200 focus:outline-none focus:border-indigo-500 transition-all">
-                    <p class="text-[13px] text-[#4F00FF] mt-1.5">Default: admin</p>
-                </div>
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Password</label>
-                    <input type="password" id="u-pass" value="admin123" class="w-full px-4 py-3.5 rounded-lg border border-gray-200 focus:outline-none focus:border-indigo-500 transition-all">
-                    <p class="text-[13px] text-[#4F00FF] mt-1.5">Default: admin123</p>
-                </div>
-                <button onclick="login()" class="w-full bg-[#4F00FF] text-white font-bold py-4 rounded-lg hover:opacity-90 transition-all text-base mt-2">Sign In</button>
-                <div class="or-divider my-6 uppercase font-medium">or</div>
-                <div class="text-center">
-                    <div class="bg-[#F8FAFC] p-5 rounded-lg text-sm border border-gray-50">
-                        <p class="text-gray-800 font-bold">Username: <span class="font-normal">admin</span></p>
-                        <p class="text-gray-800 font-bold">Password: <span class="font-normal">admin123</span></p>
-                    </div>
-                </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                <input type="password" id="password" placeholder="Enter Password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                <p class="text-xs text-indigo-600 mt-1">Default: admin123</p>
             </div>
+            <button type="submit" class="w-full bg-[#5C00FF] text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Sign In</button>
+        </form>
+
+        <div class="my-8 flex items-center before:flex-1 before:border-t before:border-gray-200 after:flex-1 after:border-t after:border-gray-200">
+            <span class="px-3 text-gray-400 text-sm italic">OR</span>
         </div>
-    </div>
 
-    <div id="dashboard" class="hidden">
-        <nav class="bg-white border-b px-8 py-5 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-sm">
-            <div class="flex items-center gap-3">
-                <i class="fab fa-github text-3xl"></i>
-                <span class="font-extrabold text-2xl tracking-tighter">IssueTracker</span>
-            </div>
-            <div class="flex items-center gap-3 mt-4 md:mt-0">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                    <input type="text" id="srch" placeholder="Search issues..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-100 bg-gray-50 text-sm w-48 md:w-64 outline-none focus:ring-1 focus:ring-indigo-500">
-                </div>
-                <button onclick="searchData()" class="bg-[#4F00FF] text-white px-5 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-all">
-                    + New Issue
-                </button>
-            </div>
-        </nav>
-
-        <div class="max-w-7xl mx-auto p-8">
-            <div class="flex gap-2 mb-10 bg-white p-1.5 rounded-2xl border border-gray-100 inline-flex shadow-sm">
-                <button id="tab-all" onclick="filter('all')" class="px-8 py-3 rounded-xl font-bold text-gray-500 active-tab transition-all">All</button>
-                <button id="tab-open" onclick="filter('open')" class="px-8 py-3 rounded-xl font-bold text-gray-500 transition-all">Open</button>
-                <button id="tab-closed" onclick="filter('closed')" class="px-8 py-3 rounded-xl font-bold text-gray-500 transition-all">Closed</button>
-            </div>
-
-            <div class="bg-white p-10 rounded-[20px] border border-gray-100 mb-10 flex flex-col md:flex-row items-center shadow-sm gap-8">
-                <div class="w-16 h-16 bg-[#E9E1FF] rounded-full flex items-center justify-center">
-                    <svg class="w-10 h-10 text-[#4F00FF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="m14.7 9-3.5 6"></path>
-                        <path d="m9.3 15 3.5-6"></path>
-                        <path d="M12 2v2"></path>
-                        <path d="M12 20v2"></path>
-                        <path d="m20 12-2 0"></path>
-                        <path d="m6 12-2 0"></path>
-                        <path d="m18.36 5.64-1.41 1.41"></path>
-                        <path d="m7.05 16.95-1.41 1.41"></path>
-                        <path d="m18.36 18.36-1.41-1.41"></path>
-                        <path d="m7.05 7.05-1.41-1.41"></path>
-                    </svg>
-                </div>
-                <div class="flex-1 text-center md:text-left">
-                    <h3 id="stat-count" class="text-4xl font-black text-gray-900 tracking-tight">0 Issues</h3>
-                    <p class="text-gray-400 font-medium text-sm mt-1">Track and manage your project issues</p>
-                </div>
-                <div class="flex gap-6 font-bold text-xs text-gray-500">
-                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500"></span> Open</span>
-                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-purple-600"></span> Closed</span>
-                </div>
-            </div>
-
-            <div id="loading" class="hidden flex justify-center py-24">
-                <div class="loader"></div>
-            </div>
-
-            <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-        </div>
-    </div>
-
-    <div id="modal-box" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-[100] backdrop-blur-sm">
-        <div class="bg-white rounded-xl w-full max-w-2xl p-8 relative shadow-2xl animate-in zoom-in duration-200" id="modal-inner">
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+            <p class="text-sm text-gray-500 mb-2">Demo Credentials:</p>
+            <p class="font-bold text-gray-700">Username: <span class="font-normal">admin</span></p>
+            <p class="font-bold text-gray-700">Password: <span class="font-normal">admin123</span></p>
         </div>
     </div>
 
     <script>
-        let allIssues = [];
-        const API_URL = 'https://phi-lab-server.vercel.app/api/v1/lab';
-
-        function login() {
-            const u = document.getElementById('u-name').value;
-            const p = document.getElementById('u-pass').value;
-            if(u === 'admin' && p === 'admin123') {
-                document.getElementById('login-sec').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                initData();
-            } else { alert("Wrong credentials! Try admin / admin123"); }
-        }
-
-        async function initData() {
-            toggleLoader(true);
-            try {
-                const res = await fetch(`${API_URL}/issues`);
-                const data = await res.json();
-                allIssues = [];
-                while(allIssues.length < 50 && data.length > 0) {
-                    allIssues = allIssues.concat(data.map(i => ({...i, _uniqueId: Math.random()})));
-                }
-                allIssues = allIssues.slice(0, 50);
-                if(allIssues.length === 0) throw new Error("Empty API");
-                render(allIssues);
-            } catch (err) { generateFallback(); } 
-            finally { toggleLoader(false); }
-        }
-
-        function generateFallback() {
-            allIssues = [];
-            for(let i=1; i<=50; i++) {
-                allIssues.push({
-                    _id: i,
-                    title: `Fix Navigation Menu On Mobile Devices`,
-                    description: "The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior.",
-                    status: i % 4 === 0 ? 'closed' : 'open',
-                    priority: i % 3 === 0 ? 'High' : (i % 2 === 0 ? 'Medium' : 'Low'),
-                    label: 'Bug',
-                    author: 'Fahim Ahmed',
-                    createdAt: '2026-02-22'
-                });
-            }
-            render(allIssues);
-        }
-
-        async function searchData() {
-            const q = document.getElementById('srch').value;
-            if(!q) return initData();
-            toggleLoader(true);
-            try {
-                const res = await fetch(`${API_URL}/issues/search?q=${q}`);
-                const data = await res.json();
-                render(data);
-            } catch (e) {
-                const filtered = allIssues.filter(i => i.title.toLowerCase().includes(q.toLowerCase()));
-                render(filtered);
-            } finally { toggleLoader(false); }
-        }
-
-        function toggleLoader(show) {
-            document.getElementById('loading').className = show ? 'flex justify-center py-24' : 'hidden';
-            document.getElementById('grid').className = show ? 'hidden' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
-        }
-
-        function render(list) {
-            const grid = document.getElementById('grid');
-            document.getElementById('stat-count').innerText = `${list.length} Issues`;
-            grid.innerHTML = "";
-
-            list.forEach(item => {
-                const isOpen = item.status.toLowerCase() === 'open';
-                const card = document.createElement('div');
-                card.className = `bg-white p-5 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col h-full ${isOpen ? 'issue-card-open' : 'issue-card-closed'}`;
-                card.onclick = () => showModal(item._id);
-                
-                const prioColor = item.priority?.toLowerCase() === 'high' ? 'bg-red-50 text-red-500' : 
-                                 item.priority?.toLowerCase() === 'medium' ? 'bg-orange-50 text-orange-400' : 'bg-gray-100 text-gray-400';
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="${isOpen ? 'bg-green-100 text-green-500' : 'bg-purple-100 text-purple-600'} w-7 h-7 rounded-full flex items-center justify-center">
-                            <i class="fas ${isOpen ? 'fa-spinner fa-spin' : 'fa-check-circle'} text-xs"></i>
-                        </div>
-                        <span class="text-[10px] font-bold px-3 py-1 rounded-full uppercase ${prioColor}">${item.priority || 'Medium'}</span>
-                    </div>
-                    <h4 class="font-bold text-gray-800 text-sm mb-2 leading-snug">${item.title}</h4>
-                    <p class="text-xs text-gray-500 mb-6 line-clamp-2">${item.description}</p>
-                    <div class="flex gap-2 mb-6">
-                        <span class="text-[9px] font-bold text-red-400 bg-red-50 px-2 py-0.5 rounded border border-red-100">BUG</span>
-                        <span class="text-[9px] font-bold text-orange-400 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">HELP WANTED</span>
-                    </div>
-                    <div class="mt-auto pt-4 border-t border-gray-100 text-[10px] text-gray-400 font-medium">
-                        <p>#${item._id} by ${item.author || 'admin'}</p>
-                        <p class="mt-1">${new Date(item.createdAt).toLocaleDateString()}</p>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filter(type) {
-            ['all', 'open', 'closed'].forEach(t => document.getElementById(`tab-${t}`).classList.remove('active-tab'));
-            document.getElementById(`tab-${type}`).classList.add('active-tab');
-            const filtered = type === 'all' ? allIssues : allIssues.filter(i => i.status.toLowerCase() === type);
-            render(filtered);
-        }
-
-        async function showModal(id) {
-            toggleLoader(true);
-            try {
-                const res = await fetch(`${API_URL}/issue/${id}`);
-                let d = await res.json();
-                if(!d || d.error) d = allIssues.find(i => i._id == id);
-
-                const isOpen = d.status.toLowerCase() === 'open';
-                const prioColor = d.priority?.toLowerCase() === 'high' ? 'bg-red-500 text-white' : 
-                                 d.priority?.toLowerCase() === 'medium' ? 'bg-orange-400 text-white' : 'bg-gray-400 text-white';
-
-                document.getElementById('modal-box').classList.replace('hidden', 'flex');
-                
-                document.getElementById('modal-inner').innerHTML = `
-                    <div class="relative">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4 pr-10">${d.title}</h2>
-                        
-                        <div class="flex flex-wrap items-center gap-3 mb-6">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${isOpen ? 'bg-[#10b981]' : 'bg-purple-600'}">
-                                ${isOpen ? 'Opened' : 'Closed'}
-                            </span>
-                            <span class="text-gray-400 text-sm">•</span>
-                            <span class="text-gray-500 text-sm">Opened by <span class="font-semibold text-gray-700">${d.author || 'Fahim Ahmed'}</span></span>
-                            <span class="text-gray-400 text-sm">•</span>
-                            <span class="text-gray-500 text-sm">${new Date(d.createdAt).toLocaleDateString()}</span>
-                        </div>
-
-                        <div class="flex gap-2 mb-8">
-                            <span class="text-[10px] font-bold text-red-400 bg-red-50 px-2.5 py-1 rounded border border-red-100">
-                                <i class="fas fa-bug mr-1"></i> BUG
-                            </span>
-                            <span class="text-[10px] font-bold text-orange-400 bg-orange-50 px-2.5 py-1 rounded border border-orange-100">
-                                <i class="fas fa-hand-paper mr-1"></i> HELP WANTED
-                            </span>
-                        </div>
-
-                        <p class="text-gray-600 text-[15px] leading-relaxed mb-10">
-                            ${d.description}
-                        </p>
-
-                        <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-between mb-8 border border-gray-100">
-                            <div>
-                                <p class="text-gray-400 text-xs font-bold uppercase mb-2">Assignee:</p>
-                                <p class="text-gray-800 font-bold text-base">${d.author || 'Fahim Ahmed'}</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-gray-400 text-xs font-bold uppercase mb-2">Priority:</p>
-                                <span class="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${prioColor}">
-                                    ${d.priority || 'MEDIUM'}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end">
-                            <button onclick="closeModal()" class="bg-[#4F00FF] text-white font-bold py-3 px-8 rounded-lg hover:opacity-90 transition-all shadow-lg shadow-indigo-100">
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } catch (e) {
-                alert("Error loading details");
-            } finally { toggleLoader(false); }
-        }
-
-        function closeModal() { document.getElementById('modal-box').classList.replace('flex', 'hidden'); }
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if(document.getElementById('username').value === 'admin' && document.getElementById('password').value === 'admin123') {
+                window.location.href = 'dashboard.html';
+            } else { alert('Invalid Login!'); }
+        });
     </script>
 </body>
 </html>
-
-this is my last one 
